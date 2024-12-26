@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: usermgm_app
+  name: usermgm-app
   namespace: argocd
   # The following annotations are used by the ArgoCD Image Updater if you don't include manifest updates in your CI/CD pipeline.
   # annotations:
