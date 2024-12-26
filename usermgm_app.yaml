@@ -1,0 +1,30 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: usermgm_app
+  namespace: argocd
+  # The following annotations are used by the ArgoCD Image Updater if you don't include manifest updates in your CI/CD pipeline.
+  # annotations:
+  #   argocd-image-updater.argoproj.io/image-list: usermgm_admin=lroquec/usermgm-admin, usermgm_user=lroquec/usermgm-admin
+  #   argocd-image-updater.argoproj.io/<alias>.update-strategy: newest-build
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/lroquec/devops-simple-k8s.git
+    path: .
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
