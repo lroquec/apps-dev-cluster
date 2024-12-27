@@ -83,3 +83,43 @@ The `Application` resource defines how Argo CD should deploy and manage the `use
    argocd app list
    argocd app get usermgm_app
    ```
+---
+# System Info App
+
+This repository contains the configuration and manifests for deploying a simple application that displays system-related information. It leverages Argo CD for continuous delivery and makes use of a Kubernetes `Secret` for storing the private SSH key required to clone a Git repository.
+
+## Overview
+
+- **Application Name:** `system-info-app`
+- **Namespace:** `argocd` (for the Argo CD `Secret`) and `default` (for the actual deployment)
+- **Repository:** [ssh://git@github.com/lroquec/k8s_nginx.git](ssh://git@github.com/lroquec/k8s_nginx.git)
+- **Image Source:** `lroquec/system-info`
+- **Deployment Controller:** Argo CD
+- **Manifest Path:** `k8s`
+
+## Key Features
+
+- **Argo CD Automation:** 
+  - Automated sync to ensure your application remains consistent with the source repository.
+  - Self-healing if any changes occur in the live cluster that drift from the repository configuration.
+
+- **Private SSH Key Storage:**
+  - A Kubernetes `Secret` is used to store the private SSH key (`sshPrivateKey`) securely.
+
+- **Image Updates via Argo CD Image Updater:**
+  - The `annotations` include Argo CD Image Updater directives to watch for newer builds of the `lroquec/system-info` image.
+
+## Argo CD Configuration
+
+The application is defined with:
+1. **Source**: Uses the `ssh://git@github.com/lroquec/k8s_nginx.git` repository at `HEAD`.
+2. **Destination**: Deploys to the `default` namespace in the Kubernetes cluster.
+3. **Sync Policy**: 
+   - `automated` with `prune` and `selfHeal` enabled.
+   - Additional `syncOptions` set to validate resources, create namespaces automatically, and prune resources appropriately.
+
+## Notes
+
+- Ensure that your Argo CD instance is configured to trust the SSH key provided in the `Secret`.
+- Confirm that the namespaces (`argocd` and `default`) are accessible within your cluster.
+- If you prefer a different version of the `lroquec/system-info` image, you can update the image tag or change the `argocd-image-updater.argoproj.io` annotations.
