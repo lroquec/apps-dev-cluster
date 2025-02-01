@@ -14,7 +14,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/lroquec/devops-simple-k8s.git
-    path: .
+    path: overlays/dev
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
